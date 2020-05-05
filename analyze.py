@@ -24,7 +24,7 @@ folder_ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 tot_features = []
 
-metadata_csv_filename = "UrbanSound8K\\UrbanSound8K.csv"
+metadata_csv_filename = "D:\\Users\\marco\\Documents\\UrbanSound8K\\UrbanSound8K.csv"
 n_mfcc = 13
 
 for folder in folder_ids:
@@ -33,7 +33,7 @@ for folder in folder_ids:
 
     # debug
     print("testing folder: " + str(folder))
-    root = "UrbanSound8K\\audio\\fold{}".format(folder)
+    root = "D:\\Users\\marco\\Documents\\UrbanSound8K\\audio\\fold{}".format(folder)
     for c in classes:
 
         # debug
