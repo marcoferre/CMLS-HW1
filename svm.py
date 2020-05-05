@@ -71,6 +71,7 @@ def get_tupla(element):
     )
 
 folder_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+cm_multiclasses_sum = np.zeros((10,10))
 for f_test_id in folder_ids:
     i = 0
     x_train = {}
@@ -93,8 +94,6 @@ for f_test_id in folder_ids:
         i += 1
 
     y_test_mc = np.concatenate(get_tupla(y_test), axis=0)
-
-    print(y_test_mc)
 
     feat_max = np.max(np.concatenate(get_tupla(x_train), axis=0))
     feat_min = np.min(np.concatenate(get_tupla(x_train), axis=0))
@@ -133,9 +132,12 @@ for f_test_id in folder_ids:
     cm_multiclasses = compute_cm_multiclass(y_test_mc, y_test_predicted_mv)
     print(f_test_id)
 
-    f = open("cm_multiclasses.txt", "a")
-    f.write(str(f_test_id))
-    f.write('\n')
-    f.write(str(cm_multiclasses))
-    f.write('\n\n')
-    f.close()
+    cm_multiclasses_sum += cm_multiclasses
+
+print(cm_multiclasses_sum)
+    # f = open("cm_multiclasses.txt", "a")
+    # f.write(str(f_test_id))
+    # f.write('\n')
+    # f.write(str(cm_multiclasses))
+    # f.write('\n\n')
+    # f.close()
