@@ -80,3 +80,17 @@ def compute_cm_multiclass(gt, predicted):
         for j in np.arange(len(pred_class)):
             CM[i, int(pred_class[j])] = CM[i, int(pred_class[j])] + 1
     return CM
+
+
+def compute_metrics(gt_labels, predicted_labels):
+
+    TP = np.sum(np.logical_and(predicted_labels == 1, gt_labels == 1))
+    FP = np.sum(np.logical_and(predicted_labels == 1, gt_labels == 0))
+    TN = np.sum(np.logical_and(predicted_labels == 0, gt_labels == 0))
+    FN = np.sum(np.logical_and(predicted_labels == 0, gt_labels == 1))
+    accuracy = (TP + TN) / (TP + FP + TN + FN)
+    precision = TP / (TP + FP)
+    recall = TP / (TP + FN)
+    F1_score = 2 * precision * recall / (precision + recall)
+    print("Results : \n accuracy = {} \n precision = {} \n recall = {} \n F1 score = {}".format(
+        accuracy, precision, recall, F1_score))
