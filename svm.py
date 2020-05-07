@@ -38,7 +38,7 @@ folder_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 for f_test_id in folder_ids:
     sub_folder_id = [x for x in folder_ids if x != f_test_id]
 
-    #dict_test_features = tot_features[f_test_id]
+    # dict_test_features = tot_features[f_test_id]
     dict_train_features = {}
 
     for f_train_id in sub_folder_id:
@@ -51,6 +51,7 @@ for f_test_id in folder_ids:
             dict_train_features[c].extend(tmp)
 
     tot_train_features[f_test_id] = dict_train_features
+
 
 # f = open("features.json", "w")
 # f.write(json.dumps(tot_train_features))
@@ -70,8 +71,8 @@ def get_tupla(element):
         element["street_music"]
     )
 
+
 folder_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-cm_multiclasses_sum = np.zeros((10,10))
 for f_test_id in folder_ids:
     i = 0
     x_train = {}
@@ -84,16 +85,18 @@ for f_test_id in folder_ids:
     for c in classes:
         x_train[c] = tot_train_features[f_test_id][c]
 
-        y_train[c] = np.ones(len(x_train[c]),) * i
+        y_train[c] = np.ones(len(x_train[c]), ) * i
 
-        #x_test[c] = dict_test_features[c]
+        # x_test[c] = dict_test_features[c]
         x_test[c] = tot_features[f_test_id][c]
 
-        y_test[c] = np.ones(len(x_test[c]),) * i
+        y_test[c] = np.ones(len(x_test[c]), ) * i
 
         i += 1
 
     y_test_mc = np.concatenate(get_tupla(y_test), axis=0)
+
+    print(y_test_mc)
 
     feat_max = np.max(np.concatenate(get_tupla(x_train), axis=0))
     feat_min = np.min(np.concatenate(get_tupla(x_train), axis=0))
@@ -104,8 +107,8 @@ for f_test_id in folder_ids:
 
     x_test_mc_normalized = np.concatenate(get_tupla(x_test_normalized), axis=0)
 
-    clf = pd.DataFrame(index=classes, columns=classes)
-    new_test_predicted = pd.DataFrame(index=classes, columns=classes)
+    #clf = pd.DataFrame(index=classes, columns=classes)
+    #new_test_predicted = pd.DataFrame(index=classes, columns=classes)
     y_test_predicted_mc = None
 
     j = 0
@@ -114,30 +117,30 @@ for f_test_id in folder_ids:
         for c2 in classes:
             if c1 < c2:
                 j += 1
-                clf[c1][c2] = sklearn.svm.SVC(**SVM_parameters, probability=True)
-                clf[c1][c2].fit(np.concatenate((x_train_normalized[c1], x_train_normalized[c2]), axis=0), np.concatenate((y_train[c1], y_train[c2]), axis=0))
+                clf = {}
+                clf = sklearn.svm.SVC(**SVM_parameters, probability=True)
+                clf.fit(np.concatenate((x_train_normalized[c1], x_train_normalized[c2]), axis=0),
+                                np.concatenate((y_train[c1], y_train[c2]), axis=0))
 
                 if y_test_predicted_mc is not None:
-                    y_test_predicted_mc = np.concatenate((y_test_predicted_mc, clf[c1][c2].predict(x_test_mc_normalized).reshape(-1, 1)), axis=1)
+                    y_test_predicted_mc = np.concatenate(
+                        (y_test_predicted_mc, clf.predict(x_test_mc_normalized).reshape(-1, 1)), axis=1)
                 else:
-                    y_test_predicted_mc = clf[c1][c2].predict(x_test_mc_normalized).reshape(-1, 1)
+                    y_test_predicted_mc = clf.predict(x_test_mc_normalized).reshape(-1, 1)
 
     y_test_predicted_mc = np.array(y_test_predicted_mc, dtype=np.int)
 
     y_test_predicted_mv = np.zeros((len(y_test_predicted_mc),))
-    
+
     for i, e in enumerate(y_test_predicted_mc):
         y_test_predicted_mv[i] = np.bincount(e).argmax()
 
-    cm_multiclasses = compute_cm_multiclass(y_test_mc, y_test_predicted_mv)
     print(f_test_id)
 
-    cm_multiclasses_sum += cm_multiclasses
-
-print(cm_multiclasses_sum)
-    # f = open("cm_multiclasses.txt", "a")
-    # f.write(str(f_test_id))
-    # f.write('\n')
-    # f.write(str(cm_multiclasses))
-    # f.write('\n\n')
-    # f.close()
+    f = open("cm_multiclasses.txt", "a")
+    cm_multiclasses = compute_cm_multiclass(y_test_mc, y_test_predicted_mv)
+    f.write(str(f_test_id))
+    f.write('\n')
+    f.write(str(cm_multiclasses))
+    f.write('\n\n')
+    f.close()
