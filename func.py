@@ -94,3 +94,18 @@ def compute_metrics(gt_labels, predicted_labels):
     F1_score = 2 * precision * recall / (precision + recall)
     print("Results : \n accuracy = {} \n precision = {} \n recall = {} \n F1 score = {}".format(
         accuracy, precision, recall, F1_score))
+
+
+def get_tupla(element):
+    return (
+        element["air_conditioner"],
+        element["car_horn"],
+        element["children_playing"],
+        element["dog_bark"],
+        element["drilling"],
+        element["engine_idling"],
+        element["gun_shot"],
+        element["jackhammer"],
+        element["siren"],
+        element["street_music"]
+    )

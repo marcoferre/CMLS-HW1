@@ -33,21 +33,30 @@ SVM_parameters = {
     'C': 1,
     'kernel': 'rbf',
 }
+
 folder_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+min_nr = 100
+for e in folder_ids:
+    for c in classes:
+        if len(tot_features[e][c]) < min_nr:
+            min_nr = len(tot_features[e][c])
+
+# for e in folder_ids:
+#     for c in classes:
+#         tot_features[e][c] = tot_features[e][c][:min_nr]
 
 for f_test_id in folder_ids:
     sub_folder_id = [x for x in folder_ids if x != f_test_id]
 
-    # dict_test_features = tot_features[f_test_id]
     dict_train_features = {}
 
     for f_train_id in sub_folder_id:
         for c in classes:
-
             if c not in dict_train_features:
                 dict_train_features[c] = []
 
-            tmp = tot_features[f_train_id][c]
+            tmp = tot_features[f_train_id][c][:min_nr]
             dict_train_features[c].extend(tmp)
 
     tot_train_features[f_test_id] = dict_train_features
@@ -56,21 +65,6 @@ for f_test_id in folder_ids:
 # f = open("features.json", "w")
 # f.write(json.dumps(tot_train_features))
 # f.close()
-
-def get_tupla(element):
-    return (
-        element["air_conditioner"],
-        element["car_horn"],
-        element["children_playing"],
-        element["dog_bark"],
-        element["drilling"],
-        element["engine_idling"],
-        element["gun_shot"],
-        element["jackhammer"],
-        element["siren"],
-        element["street_music"]
-    )
-
 
 folder_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 for f_test_id in folder_ids:
@@ -96,7 +90,7 @@ for f_test_id in folder_ids:
 
     y_test_mc = np.concatenate(get_tupla(y_test), axis=0)
 
-    print(y_test_mc)
+    # print(y_test_mc)
 
     feat_max = np.max(np.concatenate(get_tupla(x_train), axis=0))
     feat_min = np.min(np.concatenate(get_tupla(x_train), axis=0))
@@ -107,8 +101,6 @@ for f_test_id in folder_ids:
 
     x_test_mc_normalized = np.concatenate(get_tupla(x_test_normalized), axis=0)
 
-    #clf = pd.DataFrame(index=classes, columns=classes)
-    #new_test_predicted = pd.DataFrame(index=classes, columns=classes)
     y_test_predicted_mc = None
 
     j = 0
@@ -119,8 +111,7 @@ for f_test_id in folder_ids:
                 j += 1
                 clf = {}
                 clf = sklearn.svm.SVC(**SVM_parameters, probability=True)
-                clf.fit(np.concatenate((x_train_normalized[c1], x_train_normalized[c2]), axis=0),
-                                np.concatenate((y_train[c1], y_train[c2]), axis=0))
+                clf.fit(np.concatenate((x_train_normalized[c1], x_train_normalized[c2]), axis=0), np.concatenate((y_train[c1], y_train[c2]), axis=0))
 
                 if y_test_predicted_mc is not None:
                     y_test_predicted_mc = np.concatenate(

@@ -56,4 +56,3 @@ for folder in folder_ids:
 f = open("tot_features.json", "w")
 f.write(json.dumps(tot_features))
 f.close()
-
