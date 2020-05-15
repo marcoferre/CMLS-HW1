@@ -1,11 +1,6 @@
 import csv
 import numpy as np
 import librosa
-import os
-import json
-# import matplotlib.pyplot as plt
-# import sklearn.svm
-# import IPython.display as ipd
 import scipy as sp
 
 def extract_info_csv(fold, class_name, filename):
