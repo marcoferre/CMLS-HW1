@@ -1,15 +1,7 @@
-import csv
-import numpy as np
-import librosa
-import os
 import json
-import matplotlib.pyplot as plt
 import sklearn.svm
-# import IPython.display as ipd
-import scipy as sp
+import numpy
 from func import *
-import pandas as pd
-from collections import defaultdict
 
 classes = ['air_conditioner',
            'car_horn',
@@ -21,6 +13,8 @@ classes = ['air_conditioner',
            'jackhammer',
            'siren',
            'street_music']
+
+cm_multiclasses_sum = np.zeros((len(classes), len(classes)))
 
 tot_train_features = {}
 
@@ -99,6 +93,7 @@ for f_test_id in folder_ids:
         x_train_normalized[c] = (x_train[c] - feat_min) / (feat_max - feat_min)
         x_test_normalized[c] = (x_test[c] - feat_min) / (feat_max - feat_min)
 
+
     x_test_mc_normalized = np.concatenate(get_tupla(x_test_normalized), axis=0)
 
     y_test_predicted_mc = None
@@ -130,8 +125,35 @@ for f_test_id in folder_ids:
 
     f = open("cm_multiclasses.txt", "a")
     cm_multiclasses = compute_cm_multiclass(y_test_mc, y_test_predicted_mv)
+    cm_multiclasses_sum += cm_multiclasses
+
     f.write(str(f_test_id))
     f.write('\n')
     f.write(str(cm_multiclasses))
     f.write('\n\n')
     f.close()
+
+f = open("cm_multiclasses.txt", "a")
+f.write("sum:")
+f.write('\n')
+f.write(str(cm_multiclasses_sum))
+f.write('\n\n')
+f.close()
+
+for i in range(0, len(classes)):
+    line_sum = (sum(cm_multiclasses_sum[i]))
+    cm_multiclasses_sum[i] = np.round(cm_multiclasses_sum[i] * 100 / line_sum, 1)
+
+total_accuracy = sum(np.diag(cm_multiclasses_sum)) / 10
+
+
+f = open("cm_multiclasses.txt", "a")
+f.write("percent:")
+f.write('\n')
+f.write(str(cm_multiclasses_sum))
+f.write('\n\n')
+f.write("total accuracy:")
+f.write(str(np.round(total_accuracy, 3)) + "%")
+f.write('\n\n')
+f.close()
+
