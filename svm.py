@@ -30,16 +30,15 @@ SVM_parameters = {
 
 folder_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
+# compute the minimum nr of elements for all classes
 min_nr = 100
 for e in folder_ids:
     for c in classes:
         if len(tot_features[e][c]) < min_nr:
             min_nr = len(tot_features[e][c])
 
-# for e in folder_ids:
-#     for c in classes:
-#         tot_features[e][c] = tot_features[e][c][:min_nr]
 
+#list all the train features
 for f_test_id in folder_ids:
     sub_folder_id = [x for x in folder_ids if x != f_test_id]
 
@@ -56,13 +55,11 @@ for f_test_id in folder_ids:
     tot_train_features[f_test_id] = dict_train_features
 
 
-# f = open("features.json", "w")
-# f.write(json.dumps(tot_train_features))
-# f.close()
-
+#compute tests
 folder_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 for f_test_id in folder_ids:
     i = 0
+
     x_train = {}
     y_train = {}
     x_test = {}
@@ -75,7 +72,6 @@ for f_test_id in folder_ids:
 
         y_train[c] = np.ones(len(x_train[c]), ) * i
 
-        # x_test[c] = dict_test_features[c]
         x_test[c] = tot_features[f_test_id][c]
 
         y_test[c] = np.ones(len(x_test[c]), ) * i
@@ -83,8 +79,6 @@ for f_test_id in folder_ids:
         i += 1
 
     y_test_mc = np.concatenate(get_tupla(y_test), axis=0)
-
-    # print(y_test_mc)
 
     feat_max = np.max(np.concatenate(get_tupla(x_train), axis=0))
     feat_min = np.min(np.concatenate(get_tupla(x_train), axis=0))
@@ -105,6 +99,7 @@ for f_test_id in folder_ids:
             if c1 < c2:
                 j += 1
                 clf = {}
+                # computing svc for all unique combination of classes
                 clf = sklearn.svm.SVC(**SVM_parameters, probability=True)
                 clf.fit(np.concatenate((x_train_normalized[c1], x_train_normalized[c2]), axis=0), np.concatenate((y_train[c1], y_train[c2]), axis=0))
 
@@ -124,6 +119,7 @@ for f_test_id in folder_ids:
     print(f_test_id)
 
     f = open("cm_multiclasses.txt", "a")
+    # compute confusion matrix
     cm_multiclasses = compute_cm_multiclass(y_test_mc, y_test_predicted_mv)
     cm_multiclasses_sum += cm_multiclasses
 

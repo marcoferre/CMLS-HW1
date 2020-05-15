@@ -24,7 +24,8 @@ for folder in folder_ids:
 
     dict_features = {}
 
-    # debug
+#extract infos from csv
+# debug
     print("testing folder: " + str(folder))
     root = "D:\\Users\\marco\\Documents\\UrbanSound8K\\audio\\fold{}".format(folder)
     for c in classes:
@@ -35,6 +36,7 @@ for folder in folder_ids:
         class_test_files = extract_info_csv(str(folder), c, metadata_csv_filename)
         n_test_samples = len(class_test_files)
 
+#perform mfcc
         test_features = np.zeros((n_test_samples, n_mfcc))
         for index, f in enumerate(class_test_files):
             audio, fs = librosa.load(os.path.join(root, f), sr=None)
@@ -46,6 +48,7 @@ for folder in folder_ids:
 
     tot_features.append(dict_features)
 
+#print out in a json
 f = open("tot_features.json", "w")
 f.write(json.dumps(tot_features))
 f.close()
