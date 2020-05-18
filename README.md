@@ -36,10 +36,10 @@ X_test_normalized = (X_test−feat_min)/(feat_max−feat_min)
 
 It is very important to underline the fact we used the same maximum and minimum values obtained from the training set also to normalize the testing set: this is done to ensure that, in a standard situation in which we didn’t know which audio ﬁle would be given as input to the system, the model would be already created and it should have provided any way appreciable results even for new and never-before processed inputs.
 
-####3.4 Exploiting the Support Vector Machine Classiﬁer
+#### 3.4 Exploiting the Support Vector Machine Classiﬁer
 We, then, proceeded towards the actual classiﬁcation by exploiting the **Support Vector Machine Classiﬁer** taken from the `sklearn` library. Starting off, we created a _N×N_ size dataframe using the pandas library (with _N_ being the number of the classes), that would ﬁt the entire classiﬁcation data of each one of the binary confrontation between the feature values of each class. We ﬁlled this model by putting in the corresponding cell to the concatenation of the classes, taken by couples, the SVC ﬁtting result of the concatenation of the normalized train elements of the two classes which are in analysis with the concatenation of the corresponding ideal output vectors of the same two ones. Then we append the result freshly obtained to the vector `y_test_predicted_mc`, and normalizing the values between−1 and 1. Finally, we performed a majority voting in order to obtain the `y_test_predicted_mv` vector, which we would use to calculate the multi-class confusion matrix for each one of the ten iterations. The call to this last method would provide also the `y_test_mc vector`, also known as the vector containing all the correct values that the process should have calculated during the classiﬁcation process.
 
-####3.5 Final Results and Accuracy
+#### 3.5 Final Results and Accuracy
 We eventually made a **confusion matrix** related to the accuracy related to all folds, with the percentage of samples recognized by our algorithm, rounded off to two decimals. We gain the ﬁnal accuracy by calculating the mean value of the main diagonal values: Accuracy 44.0%.
 
 In `Solution.pdf` the detailed paper.
