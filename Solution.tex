@@ -27,7 +27,7 @@ All the work is pushed to GitHub on this following URL: \url{https://github.com/
 \section{Analyzing the Data}
 
 For this process, as suggested by the author of the sampled audio, we proceeded to apply a 10-fold cross-validation method: in a nutshell, this consists in selecting one fold for testing and using the remaining nine for training; after 10 iterations, corresponding to all possible combinations of testing folds, we get a pretty homogeneous analysis of the given data.\\
-We chose to use the \textbf{MFCC (Mel-Frequency Cepstral Coefficient} as our main feature selection, where:
+We chose to use the \textbf{MFCC (Mel-Frequency Cepstral Coefficient)} as our main feature selection, where:
 \begin{itemize}
 \item all audio files are windowed by applying a Hamming window made of 1,024 samples, and a hop-size of 512 samples;
 \item the STFT (Short-Time Fourier Transform) was computed for each audio file, and we ended up taking into consideration only the absolute values of the result;
