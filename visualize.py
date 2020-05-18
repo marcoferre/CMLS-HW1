@@ -14,7 +14,7 @@ classes = ['air_conditioner',
            'street_music']
 
 
-f = open("tot_features.json", "r")
+f = open("output/tot_features.json", "r")
 f_str = f.read()
 
 tot_features = json.loads(f_str)

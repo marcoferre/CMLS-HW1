@@ -49,6 +49,6 @@ for folder in folder_ids:
     tot_features.append(dict_features)
 
 #print out in a json
-f = open("tot_features.json", "w")
+f = open("output/tot_features.json", "w")
 f.write(json.dumps(tot_features))
 f.close()

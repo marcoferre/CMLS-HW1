@@ -18,7 +18,7 @@ cm_multiclasses_sum = np.zeros((len(classes), len(classes)))
 
 tot_train_features = {}
 
-f = open("tot_features.json", "r")
+f = open("output/tot_features.json", "r")
 f_str = f.read()
 
 tot_features = json.loads(f_str)
@@ -118,7 +118,7 @@ for f_test_id in folder_ids:
 
     print(f_test_id)
 
-    f = open("cm_multiclasses.txt", "a")
+    f = open("output/cm_multiclasses.txt", "a")
     # compute confusion matrix
     cm_multiclasses = compute_cm_multiclass(y_test_mc, y_test_predicted_mv)
     cm_multiclasses_sum += cm_multiclasses
@@ -129,7 +129,7 @@ for f_test_id in folder_ids:
     f.write('\n\n')
     f.close()
 
-f = open("cm_multiclasses.txt", "a")
+f = open("output/cm_multiclasses.txt", "a")
 f.write("sum:")
 f.write('\n')
 f.write(str(cm_multiclasses_sum))
@@ -143,12 +143,12 @@ for i in range(0, len(classes)):
 total_accuracy = sum(np.diag(cm_multiclasses_sum)) / 10
 
 
-f = open("cm_multiclasses.txt", "a")
+f = open("output/cm_multiclasses.txt", "a")
 f.write("percent:")
 f.write('\n')
 f.write(str(cm_multiclasses_sum))
 f.write('\n\n')
-f.write("total accuracy:")
+f.write("total accuracy: ")
 f.write(str(np.round(total_accuracy, 3)) + "%")
 f.write('\n\n')
 f.close()
