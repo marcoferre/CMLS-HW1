@@ -8,6 +8,7 @@
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{mathpazo}
+\usepackage{hyperref}
 
 \author{Samuele Bosi, Marco Ferrè, Philip Michael Grasselli, Simone Mariani}
 \title{\textbf{CMLS Homework 1 – Audio Event Classification}}
@@ -21,6 +22,7 @@
 In this homework our task was to implement a classifier able to predict the audio event recorded in an audio excerpt.\\
 In order to do this, we were provided with a collection of sampled sounds of a crowded urban area, each one corresponding to a given class among a group of 10. On the top of that, those audio files were also split into 10 different folders, and heterogeneously chosen with respect to the belonging classes.\\
 Our main task was to analyze the different folders following precise criteria in order to create a model which -- for any chosen \textit{testing} folder -- recognizes for each file its belonging class, by means of performing tests on the signal characteristics along to some feature selection methods appropriately chosen by us.
+All the work is pushed to GitHub on this following URL: \url{https://github.com/marcoferre/CMLS-HW1}.
 
 \section{Analyzing the Data}
 
@@ -81,7 +83,7 @@ It is very important to underline the fact we used the same maximum and minimum 
 \subsection{Exploiting the Support Vector Machine Classifier}
 We, then, proceeded towards the actual classification by exploiting the \textbf{Support Vector Machine Classifier} taken from the \texttt{sklearn} library. Starting off, we created a $N\times N$ size dataframe using the \texttt{pandas} library (with $N$ being the number of the classes), that would fit the entire classification data of each one of the binary confrontation between the feature values of each class.\\
 We filled this model by putting in the corresponding cell to the concatenation of the classes, taken by couples, the SVC fitting result of the concatenation of the normalized train elements of the two classes which are in analysis with the concatenation of the corresponding ideal output vectors of the same two ones. Then we append the result freshly obtained to the vector \texttt{y{\_}test{\_}predicted{\_}mc}, and normalizing the values between $-1$ and $1$.\\
-Finally, we performed a majority voting in order to obtain the \texttt{y{\_}test{\_}predicted{\_}mv} vector, which we would use to calculate the multi-class confusion matrix for each one of the ten iterations. The call to this last method would provide also the \texttt{y{\_}test{\_}mc} vector, also known as the vector containing all the correct values that the process should have calculated during the classification process. The following is the confusion matrix referred to just the first feature took into consideration, the \texttt{air{\_}conditioner}.
+Finally, we performed a majority voting in order to obtain the \texttt{y{\_}test{\_}predicted{\_}mv} vector, which we would use to calculate the multi-class confusion matrix for each one of the ten iterations. The call to this last method would provide also the \texttt{y{\_}test{\_}mc} vector, also known as the vector containing all the correct values that the process should have calculated during the classification process. The following is the confusion matrix referred to just the first fold, just as an example: on the main diagonal we have the correctly labeled values, the higher the better.
 
 \begin{equation}
 \begin{bmatrix}
@@ -98,4 +100,26 @@ Finally, we performed a majority voting in order to obtain the \texttt{y{\_}test
 \end{bmatrix}
 \end{equation}
 
+\subsection{Final Results and Accuracy}
+We eventually made a \textbf{confusion matrix} related to the accuracy related to all folds, with the percentage of samples recognized by our algorithm, rounded off to two decimals.
+
+\begin{equation}
+\begin{bmatrix}
+21.5 & 0.7 & 16.1 & 3.2 & 4.6 & 1.9 & 1.8 & 23.7 & 3.3 & 23.2 \\
+4.0 & 66.9 & 8.4 & 1.2 & 3.5 & 0.7 & 7.7 & 3.0 & 2.6 & 2.1 \\
+4.9 & 1.8 & 42.8 & 5.2 & 7.0 & 3.8 & 13.6 & 7.8 & 2.5 & 10.6 \\
+9.2 & 2.4 & 8.0 & 41.0 & 7.6 & 3.2 & 10.2 & 3.5 & 6.3 & 8.6 \\
+6.9 & 3.6 & 7.2 & 5.9 & 32.9 & 4.8 & 8.9 & 24.7 & 1.7 & 3.4 \\
+12.6 & 1.0 & 21.9 & 1.9 & 0.3 & 23.4 & 3.5 & 21.8 & 6.8 & 6.8 \\
+1.3 & 1.9 & 10.4 & 2.9 & 12.3 & 2.1 & 54.8 & 7.5 & 0.8 & 5.9 \\
+6.4 & 0.0 & 14.7 & 0.0 & 2.2 & 3.0 & 3.4 & 57.8 & 4.7 & 7.8 \\
+8.7 & 1.7 & 5.0 & 10.8 & 0.5 & 3.5 & 4.0 & 0.9 & 63.0 & 2.0 \\
+11.5 & 4.1 & 16.0 & 4.2 & 2.9 & 3.0 & 9.3 & 8.7 & 4.0 & 36.3
+\end{bmatrix}
+[\%]
+\end{equation}
+We gain the final accuracy by calculating the mean value of the main diagonal values:
+\begin{equation}
+\mathrm{Accuracy}=\frac{\displaystyle\sum_{i=0}^{9} \sum_{j=0}^{9} a_{ij}}{10}=44.0\% \qquad i=j
+\end{equation}
 \end{document}
